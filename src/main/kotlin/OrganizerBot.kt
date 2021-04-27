@@ -29,7 +29,9 @@ class OrganizerBot: TelegramLongPollingBot() {
 //                "Расписание на" -> message.text =
 //                    if (command.args.size == 0 || command.args.size > 1) "invalid command"
 //                    else if (command.args.get(0) == "сегодня") api.scheduleForToday()
-//                    else api.scheduleForTheDay(command.args.get(0))
+//                    else {
+//                        val list = api.scheduleForTheDay(command.args.get(0))
+//                    }
                 else -> message.text = "invalid command"
             }
             try {

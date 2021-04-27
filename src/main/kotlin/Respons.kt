@@ -1,10 +1,13 @@
-import org.json.JSONArray
-import java.net.URL
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.features.DefaultRequest.Feature.install
+import io.ktor.client.features.json.*
+import io.ktor.client.request.*
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
-import java.util.*
-import org.json.JSONObject
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import javax.ws.rs.client.Client
 
 // 1. Расписание на день
 // 2. Расписание на неделю
@@ -22,8 +25,11 @@ data class Lesson(
     val link: String
 )
 
+@Serializable
+data class ScheduleParams(val day: Int)
+
 interface API {
-    fun scheduleForToday()
+    fun scheduleForToday(): List<Lesson>
     fun scheduleForTheDay(day: String): List<Lesson>
     fun scheduleForWeek()
     fun sendHW()
@@ -32,6 +38,8 @@ interface API {
 }
 
 class APIImpl : API {
+
+    private val client = HttpClient(CIO)
 
     private fun getCurrDay(day: String): Int {
         return when (day) {
@@ -48,33 +56,39 @@ class APIImpl : API {
 
     override fun scheduleForTheDay(day: String): List<Lesson> {
         val currDay = getCurrDay(day)
+        var json = ""
+        runBlocking {
+            json = client.get<String>("http://localhost:5000") {
+                body = ScheduleParams(currDay)
+            }
+        }
         if (currDay != -1) {
-            val json = """
-[
-  {
-    "start_time": 12345,
-    "end_time": 12346,
-    "name": "Матлогика",
-    "subtype": "Семинар",
-    "link": "zoom.us"
-  },
-  {
-    "start_time": 312421,
-    "end_time": 312422,
-    "name": "Алгосы",
-    "subtype": "Лекция",
-    "link": "zoom.us"
-  }
-]
-            """
+//            val json = """
+//[
+//  {
+//    "start_time": 12345,
+//    "end_time": 12346,
+//    "name": "Матлогика",
+//    "subtype": "Семинар",
+//    "link": "zoom.us"
+//  },
+//  {
+//    "start_time": 312421,
+//    "end_time": 312422,
+//    "name": "Алгосы",
+//    "subtype": "Лекция",
+//    "link": "zoom.us"
+//  }
+//]
+//            """
             return Json.decodeFromString(json)
         }
         return emptyList()
     }
 
 
-    override fun scheduleForToday() {
-        when (LocalDate.now().dayOfWeek.name) {
+    override fun scheduleForToday(): List<Lesson> {
+        return when (LocalDate.now().dayOfWeek.name) {
             "MONDAY" -> scheduleForTheDay("понедельник")
             "TUESDAY" -> scheduleForTheDay("вторник")
             "WEDNESDAY" -> scheduleForTheDay("среда")
@@ -87,7 +101,7 @@ class APIImpl : API {
     }
 
     override fun scheduleForWeek() {
-
+        TODO("Not yet implemented")
     }
 
     override fun sendHW() {
@@ -99,6 +113,6 @@ class APIImpl : API {
     }
 
     override fun getHWForTheDay(day: String) {
-        val currDay = getCurrDay(day)
+        TODO("Not yet implemented")
     }
 }

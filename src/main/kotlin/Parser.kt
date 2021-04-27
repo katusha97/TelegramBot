@@ -1,6 +1,6 @@
 class Parser {
     fun parse(string: String): Command {
-        if (string.equals("start")) {
+        if (string.equals("/start")) {
             return Command("start", ArrayList())
         } else if (string.startsWith("Расписание")) {
             return Command("Расписание", ArrayList())
