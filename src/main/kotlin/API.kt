@@ -14,6 +14,6 @@ interface API {
     fun scheduleOFCourse(course: Course): String
     fun scheduleForWeek()
     fun sendHW()
-    fun getAllHW()
+    suspend fun getAllHW(): List<Homework>
     fun getHWForTheDay(day: DayOfWeek)
 }

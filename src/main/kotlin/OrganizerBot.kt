@@ -1,3 +1,5 @@
+
+import commands.Homework
 import commands.CourseDefinition
 import commands.GroupDefinition
 import commands.Timetable
@@ -13,16 +15,17 @@ import java.util.*
 
 class OrganizerBot : TelegramLongPollingCommandBot() {
     override fun getBotToken(): String {
-        return "1728118655:AAEQOKogNSnI0WgkTNzpbpufH6LXi6HP6lQ"
+        return System.getenv("1728118655:AAEQOKogNSnI0WgkTNzpbpufH6LXi6HP6lQ")
     }
 
     override fun getBotUsername(): String {
-        return "JB_MSE_bot"
+        return System.getenv("JB_MSE_bot")
     }
 
     init {
         register(TimetableToday())
         register(Timetable())
+        register(Homework())
         register(CourseDefinition())
         register(GroupDefinition())
         register(Specialization())

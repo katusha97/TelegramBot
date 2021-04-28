@@ -19,6 +19,7 @@ class Timetable : BotCommand("timetable", "Расписание") {
         message.disableWebPagePreview = true
 
         val keyboardMarkup = ReplyKeyboardMarkup()
+        keyboardMarkup.oneTimeKeyboard = true
         val keyboard: MutableList<KeyboardRow> = mutableListOf()
         val row1 = KeyboardRow()
         row1.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL, Locale.US))
