@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot
 import subjects.Course
-import subjects.Specialization
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.*
@@ -27,7 +26,6 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
         register(Homework())
         register(CourseDefinition())
         register(GroupDefinition())
-        register(Specialization())
     }
 
     override fun processNonCommandUpdate(update: Update?) {
@@ -54,23 +52,20 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                         message.text = api.scheduleOFCourse(message.chatId, Course("matlogic", 2))
                     }
                     "Алгоритмы/Мишунин" -> {
-                        message.text = api.scheduleOFCourse(message.chatId, Course("Algoritms", 1))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("algoritms", 1))
                     }
                     "Алгоритмы/Лапенок" -> {
-                        message.text = api.scheduleOFCourse(message.chatId, Course("Algoritms", 2))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("algoritms", 2))
                     }
                     "Формальные языки/Халанский" -> {
-                        message.text = api.scheduleOFCourse(message.chatId, Course("FormaLAng", 1))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("formaLAng", 1))
                     }
                     "Формальные языки/Вербицкая" -> {
-                        message.text = api.scheduleOFCourse(message.chatId, Course("FormalLAng", 2))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("formalLAng", 2))
                     }
-                    "Предмет по специализации" -> {
-                        message.text = "specialization"
-                    }
-                    "С++" -> message.text = "C++"
-                    "Матстат" -> message.text = "Matstat"
-                    "Типы в ЯП" -> message.text = "Type"
+                    "С++" -> message.text = api.scheduleOFCourse(message.chatId, Course("specialization", 1))
+                    "Матстат" -> message.text = api.scheduleOFCourse(message.chatId, Course("specialization", 2))
+                    "Типы в ЯП" -> message.text = api.scheduleOFCourse(message.chatId, Course("specialization", 3))
                     else -> message.text = "invalid command"
                 }
             }

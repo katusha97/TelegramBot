@@ -30,15 +30,15 @@ class HTTPAPI : API {
     }
 
     override fun scheduleOFCourse(userId: String, course: Course): String {
-        var json = ""
+        var res = ""
         runBlocking {
-            json = client.get("http://94.103.83.6:5001/set_lessons") {
+            res = client.get("http://94.103.83.6:5001/set_lessons") {
                 header("Content-Type", "application/json")
                 header("Ident", userId)
                 body = course
             }
         }
-        return json
+        return res
     }
 
     override fun scheduleForWeek() {

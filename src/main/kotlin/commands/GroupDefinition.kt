@@ -10,9 +10,9 @@ import org.telegram.telegrambots.meta.bots.AbsSender
 
 class GroupDefinition : BotCommand("timetable_by_subject", "Выбери предмет") {
 
-    private val listOfSubject = listOf<String>("Алгоритмы/Жаворонков", "Алгоритмы/Лапенок",
+    private val listOfSubject = listOf<String>("Алгоритмы/Мишунин", "Алгоритмы/Лапенок",
         "Матлогика/Халанский", "Матлогика/Жаворонков", "Формальные языки/Халанский", "Формальные языки/Вербицкая",
-        "Предмет по специализации")
+        "С++", "Матстат", "Типы в ЯП")
 
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val message = SendMessage()
@@ -23,19 +23,16 @@ class GroupDefinition : BotCommand("timetable_by_subject", "Выбери пре�
         val keyboardMarkup = ReplyKeyboardMarkup()
         val keyboard: MutableList<KeyboardRow> = mutableListOf()
         val row1 = KeyboardRow()
-        for (i in 0 until 3) {
-            row1.add(listOfSubject[i])
-        }
         val row2 = KeyboardRow()
-        for (i in 3 until 6) {
+        for (i in 0 until 4) {
             row1.add(listOfSubject[i])
         }
-        val row3 = KeyboardRow()
-        row3.add(listOfSubject[6])
+        for (i in 4 until 9) {
+            row2.add(listOfSubject[i])
+        }
 
         keyboard.add(row1)
         keyboard.add(row2)
-        keyboard.add(row3)
 
         keyboardMarkup.keyboard = keyboard
         message.replyMarkup = keyboardMarkup
