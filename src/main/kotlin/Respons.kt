@@ -39,7 +39,7 @@ interface API {
 
 class APIImpl : API {
 
-    private val client = HttpClient(CIO)
+    private val client = HttpClient(CIO) { install(JsonFeature) }
 
     private fun getCurrDay(day: String): Int {
         return when (day) {
@@ -58,7 +58,8 @@ class APIImpl : API {
         val currDay = getCurrDay(day)
         var json = ""
         runBlocking {
-            json = client.get<String>("http://localhost:5000") {
+            json = client.get<String>("http://localhost:5000/day") {
+		header("Content-Type", "application/json")
                 body = ScheduleParams(currDay)
             }
         }
@@ -81,6 +82,7 @@ class APIImpl : API {
 //  }
 //]
 //            """
+	    System.err.println(json)
             return Json.decodeFromString(json)
         }
         return emptyList()
