@@ -21,6 +21,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:1.5.3")
     implementation("io.ktor:ktor-client-cio:1.5.3")
     implementation("io.ktor:ktor-client-serialization:1.5.3")
+    implementation("org.telegram:telegrambotsextensions:5.2.0")
 }
 
 

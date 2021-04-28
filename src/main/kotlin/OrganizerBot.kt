@@ -1,11 +1,10 @@
-import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.TelegramBotsApi
+import commands.ScheduleCommand
+import commands.ScheduleTodayCommand
 import org.telegram.telegrambots.meta.api.objects.Update
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
+import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot
 
-class OrganizerBot: TelegramLongPollingBot() {
+class OrganizerBot : TelegramLongPollingCommandBot() {
     override fun getBotToken(): String {
         return "1728118655:AAEQOKogNSnI0WgkTNzpbpufH6LXi6HP6lQ"
     }
@@ -14,41 +13,26 @@ class OrganizerBot: TelegramLongPollingBot() {
         return "JB_MSE_bot"
     }
 
-    override fun onUpdateReceived(update: Update?) {
+    init {
+        register(ScheduleTodayCommand())
+        register(ScheduleCommand())
+    }
+
+    override fun processNonCommandUpdate(update: Update?) {
         if (update!!.hasMessage() && update.message.hasText()) {
             val message = SendMessage()
             message.chatId = update.message.chatId.toString()
-            val api = APIImpl()
-            val parser = Parser()
-            val request = update.message.text
-            val command = parser.parse(request)
-            val lessons = api.scheduleForTheDay("понедельник")
-            when(command.name) {
-                "start" -> message.text = lessons.toString()
-//                "Paсписание" -> message.text = api.scheduleForWeek()
-//                "Расписание на" -> message.text =
-//                    if (command.args.size == 0 || command.args.size > 1) "invalid command"
-//                    else if (command.args.get(0) == "сегодня") api.scheduleForToday()
-//                    else {
-//                        val list = api.scheduleForTheDay(command.args.get(0))
-//                    }
-                else -> message.text = "invalid command"
+            message.parseMode = "MarkdownV2"
+            message.disableWebPagePreview = true
+            if (Days.values().map { d -> d.ru }.contains(update.message.text)) {
+                val api = HTTPAPI()
+                val day = Days.values().find { day -> day.ru == update.message.text }!!
+                val lessons = api.scheduleForTheDay(day)
+                message.text = lessons.joinToString("\n")
+            } else {
+                message.text = "invalid command"
             }
-            try {
-                execute(message)
-            } catch (e: TelegramApiException) {
-                e.printStackTrace()
-            }
+            execute(message)
         }
-    }
-
-}
-
-fun main() {
-    try {
-        val botsApi = TelegramBotsApi(DefaultBotSession::class.java)
-        botsApi.registerBot(OrganizerBot())
-    } catch (e: TelegramApiException) {
-        e.printStackTrace()
     }
 }
