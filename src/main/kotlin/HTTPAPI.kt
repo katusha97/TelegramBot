@@ -5,6 +5,7 @@ import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import subjects.Course
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -12,37 +13,31 @@ class HTTPAPI : API {
 
     private val client = HttpClient(CIO) { install(JsonFeature) }
 
-    override fun scheduleForTheDay(day: DayOfWeek): List<Lesson> {
+    override fun scheduleForTheDay(day: DayOfWeek, userId: String): Timetable {
         var json = ""
         runBlocking {
-            json = client.get<String>("http://localhost:5000/day") {
+            json = client.get<String>("http://94.103.83.6:5001/day") {
                 header("Content-Type", "application/json")
+                header("Ident", userId)
                 body = ScheduleParams(day.value)
             }
         }
-//        val json = """
-//[
-//  {
-//    "start_time": 12345,
-//    "end_time": 12346,
-//    "name": "Матлогика",
-//    "subtype": "Семинар",
-//    "link": "zoom.us"
-//  },
-//  {
-//    "start_time": 312421,
-//    "end_time": 312422,
-//    "name": "Алгосы",
-//    "subtype": "Лекция",
-//    "link": "zoom.us"
-//  }
-//]
-//            """
         return Json.decodeFromString(json)
     }
 
-    override fun scheduleForToday(): List<Lesson> {
-        return scheduleForTheDay(LocalDate.now().dayOfWeek)
+    override fun scheduleForToday(userId: String): Timetable {
+        return scheduleForTheDay(LocalDate.now().dayOfWeek, userId)
+    }
+
+    override fun scheduleOFCourse(course: Course): String {
+        var json = ""
+        runBlocking {
+            json = client.get("http://94.103.83.6:5001/set_lessons") {
+                header("Content-Type", "application/json")
+                body = course
+            }
+        }
+        return json
     }
 
     override fun scheduleForWeek() {

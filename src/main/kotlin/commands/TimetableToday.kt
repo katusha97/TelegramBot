@@ -15,8 +15,8 @@ class TimetableToday : BotCommand("timetable_today", "Расписание на 
         message.disableWebPagePreview = true
 
         val api = HTTPAPI()
-        val lessons = api.scheduleForToday()
-        message.text = lessons.joinToString("\n")
+        val lessons = api.scheduleForToday(message.chatId)
+        message.text = lessons.lessons.joinToString("\n")
         absSender!!.execute(message)
     }
 }

@@ -7,11 +7,13 @@ import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 import org.telegram.telegrambots.meta.bots.AbsSender
-import java.time.DayOfWeek
-import java.time.format.TextStyle
-import java.util.*
 
-class Timetable : BotCommand("timetable", "Расписание") {
+class GroupDefinition : BotCommand("timetable_by_subject", "Выбери предмет") {
+
+    private val listOfSubject = listOf<String>("Алгоритмы/Жаворонков", "Алгоритмы/Лапенок",
+        "Матлогика/Халанский", "Матлогика/Жаворонков", "Формальные языки/Халанский", "Формальные языки/Вербицкая",
+        "Предмет по специализации")
+
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val message = SendMessage()
         message.chatId = chat!!.id.toString()
@@ -19,24 +21,26 @@ class Timetable : BotCommand("timetable", "Расписание") {
         message.disableWebPagePreview = true
 
         val keyboardMarkup = ReplyKeyboardMarkup()
-        keyboardMarkup.oneTimeKeyboard = true
         val keyboard: MutableList<KeyboardRow> = mutableListOf()
         val row1 = KeyboardRow()
-        row1.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL, Locale.US))
-        row1.add(DayOfWeek.TUESDAY.getDisplayName(TextStyle.FULL, Locale.US))
-        row1.add(DayOfWeek.WEDNESDAY.getDisplayName(TextStyle.FULL, Locale.US))
+        for (i in 0 until 3) {
+            row1.add(listOfSubject[i])
+        }
         val row2 = KeyboardRow()
-        row2.add(DayOfWeek.THURSDAY.getDisplayName(TextStyle.FULL, Locale.US))
-        row2.add(DayOfWeek.FRIDAY.getDisplayName(TextStyle.FULL, Locale.US))
-        row2.add(DayOfWeek.SATURDAY.getDisplayName(TextStyle.FULL, Locale.US))
+        for (i in 3 until 6) {
+            row1.add(listOfSubject[i])
+        }
+        val row3 = KeyboardRow()
+        row3.add(listOfSubject[6])
 
         keyboard.add(row1)
         keyboard.add(row2)
+        keyboard.add(row3)
 
         keyboardMarkup.keyboard = keyboard
         message.replyMarkup = keyboardMarkup
         keyboardMarkup.oneTimeKeyboard = true
-        message.text = "Выберите день"
+        message.text = "Выберите предмет"
         absSender!!.execute(message)
     }
 }

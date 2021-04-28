@@ -1,3 +1,4 @@
+import subjects.Course
 import java.time.DayOfWeek
 
 // 1. Расписание на день
@@ -8,8 +9,9 @@ import java.time.DayOfWeek
 // 6. Получить дз по определенному предмету
 
 interface API {
-    fun scheduleForToday(): List<Lesson>
-    fun scheduleForTheDay(day: DayOfWeek): List<Lesson>
+    fun scheduleForToday(userId: String): Timetable
+    fun scheduleForTheDay(day: DayOfWeek, userId: String): Timetable
+    fun scheduleOFCourse(course: Course): String
     fun scheduleForWeek()
     fun sendHW()
     suspend fun getAllHW(): List<Homework>

@@ -1,6 +1,9 @@
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class Timetable(val lessons: List<Lesson>)
+
+@Serializable
 data class Lesson(
     val start_time: Int,
     val end_time: Int,
