@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.bots.AbsSender
 
-class ScheduleTodayCommand : BotCommand("schedule_today", "Расписание на сегодня") {
+class TimetableToday : BotCommand("timetable_today", "Расписание на сегодня") {
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val message = SendMessage()
         message.chatId = chat!!.id.toString()

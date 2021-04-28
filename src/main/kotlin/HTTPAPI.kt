@@ -5,19 +5,19 @@ import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.lang.RuntimeException
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 class HTTPAPI : API {
 
     private val client = HttpClient(CIO) { install(JsonFeature) }
 
-    override fun scheduleForTheDay(day: Days): List<Lesson> {
+    override fun scheduleForTheDay(day: DayOfWeek): List<Lesson> {
         var json = ""
         runBlocking {
             json = client.get<String>("http://localhost:5000/day") {
                 header("Content-Type", "application/json")
-                body = ScheduleParams(day.number)
+                body = ScheduleParams(day.value)
             }
         }
 //        val json = """
@@ -42,16 +42,7 @@ class HTTPAPI : API {
     }
 
     override fun scheduleForToday(): List<Lesson> {
-        return when (LocalDate.now().dayOfWeek.name) {
-            "MONDAY" -> scheduleForTheDay(Days.MONDAY)
-            "TUESDAY" -> scheduleForTheDay(Days.TUESDAY)
-            "WEDNESDAY" -> scheduleForTheDay(Days.WEDNESDAY)
-            "THURSDAY" -> scheduleForTheDay(Days.THURSDAY)
-            "FRIDAY" -> scheduleForTheDay(Days.FRIDAY)
-            "SATURDAY" -> scheduleForTheDay(Days.SATURDAY)
-            "SUNDAY" -> scheduleForTheDay(Days.SUNDAY)
-            else -> throw RuntimeException("Invalid day")
-        }
+        return scheduleForTheDay(LocalDate.now().dayOfWeek)
     }
 
     override fun scheduleForWeek() {
@@ -66,7 +57,7 @@ class HTTPAPI : API {
         TODO("Not yet implemented")
     }
 
-    override fun getHWForTheDay(day: Days) {
+    override fun getHWForTheDay(day: DayOfWeek) {
         TODO("Not yet implemented")
     }
 }
