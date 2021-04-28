@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.serialization") version "1.4.30"
+    application
 }
 
 group = "me.katya"
@@ -22,6 +23,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:1.5.3")
     implementation("io.ktor:ktor-client-serialization:1.5.3")
     implementation("org.telegram:telegrambotsextensions:5.2.0")
+    implementation("org.slf4j:slf4j-api:1.7.30")
+    implementation("org.slf4j:slf4j-simple:1.7.30")
 }
 
 
@@ -31,4 +34,8 @@ tasks.test {
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+application {
+    mainClass.set("OrganizerBotKt")
 }
