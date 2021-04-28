@@ -1,3 +1,4 @@
+import commands.Homework
 import commands.Timetable
 import commands.TimetableToday
 import org.telegram.telegrambots.meta.api.objects.Update
@@ -9,16 +10,19 @@ import java.util.*
 
 class OrganizerBot : TelegramLongPollingCommandBot() {
     override fun getBotToken(): String {
-        return "1728118655:AAEQOKogNSnI0WgkTNzpbpufH6LXi6HP6lQ"
+        return "1688066747:AAEluMgDwwUsWTARcXxyigdhfhr-beQhLOI"
+        //return "1728118655:AAEQOKogNSnI0WgkTNzpbpufH6LXi6HP6lQ"
     }
 
     override fun getBotUsername(): String {
-        return "JB_MSE_bot"
+        return "jb_organizer_bot"
+        //return "JB_MSE_bot"
     }
 
     init {
         register(TimetableToday())
         register(Timetable())
+        register(Homework())
     }
 
     override fun processNonCommandUpdate(update: Update?) {

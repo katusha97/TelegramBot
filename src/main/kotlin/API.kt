@@ -12,6 +12,6 @@ interface API {
     fun scheduleForTheDay(day: DayOfWeek): List<Lesson>
     fun scheduleForWeek()
     fun sendHW()
-    fun getAllHW()
+    suspend fun getAllHW(): List<Homework>
     fun getHWForTheDay(day: DayOfWeek)
 }

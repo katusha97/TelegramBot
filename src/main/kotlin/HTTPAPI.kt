@@ -53,8 +53,9 @@ class HTTPAPI : API {
         TODO("Not yet implemented")
     }
 
-    override fun getAllHW() {
-        TODO("Not yet implemented")
+    override suspend fun getAllHW(): List<Homework> {
+        val response = client.get<String>("http://94.103.83.6:5001/homework")
+        return Json.decodeFromString(response)
     }
 
     override fun getHWForTheDay(day: DayOfWeek) {
