@@ -10,13 +10,11 @@ import java.util.*
 
 class OrganizerBot : TelegramLongPollingCommandBot() {
     override fun getBotToken(): String {
-        return "1688066747:AAEluMgDwwUsWTARcXxyigdhfhr-beQhLOI"
-        //return "1728118655:AAEQOKogNSnI0WgkTNzpbpufH6LXi6HP6lQ"
+        return System.getenv("JB_BOT_TOKEN")
     }
 
     override fun getBotUsername(): String {
-        return "jb_organizer_bot"
-        //return "JB_MSE_bot"
+        return System.getenv("JB_BOT_NAME")
     }
 
     init {
