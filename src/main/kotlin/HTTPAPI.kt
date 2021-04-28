@@ -29,11 +29,12 @@ class HTTPAPI : API {
         return scheduleForTheDay(LocalDate.now().dayOfWeek, userId)
     }
 
-    override fun scheduleOFCourse(course: Course): String {
+    override fun scheduleOFCourse(userId: String, course: Course): String {
         var json = ""
         runBlocking {
             json = client.get("http://94.103.83.6:5001/set_lessons") {
                 header("Content-Type", "application/json")
+                header("Ident", userId)
                 body = course
             }
         }

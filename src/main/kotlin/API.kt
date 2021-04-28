@@ -11,7 +11,7 @@ import java.time.DayOfWeek
 interface API {
     fun scheduleForToday(userId: String): Timetable
     fun scheduleForTheDay(day: DayOfWeek, userId: String): Timetable
-    fun scheduleOFCourse(course: Course): String
+    fun scheduleOFCourse(userId: String, course: Course): String
     fun scheduleForWeek()
     fun sendHW()
     suspend fun getAllHW(): List<Homework>

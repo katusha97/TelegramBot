@@ -1,4 +1,3 @@
-
 import commands.Homework
 import commands.CourseDefinition
 import commands.GroupDefinition
@@ -15,11 +14,11 @@ import java.util.*
 
 class OrganizerBot : TelegramLongPollingCommandBot() {
     override fun getBotToken(): String {
-        return System.getenv("1728118655:AAEQOKogNSnI0WgkTNzpbpufH6LXi6HP6lQ")
+        return System.getenv("JB_BOT_TOKEN")
     }
 
     override fun getBotUsername(): String {
-        return System.getenv("JB_MSE_bot")
+        return System.getenv("JB_BOT_NAME")
     }
 
     init {
@@ -49,22 +48,22 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
             } else {
                 when (currCommand) {
                     "Матлогика/Жаворонков" -> {
-                        message.text = api.scheduleOFCourse(Course("Matlogic", 1))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("matlogic", 1))
                     }
                     "Матлогика/Халанский" -> {
-                        message.text = api.scheduleOFCourse(Course("Matlogic", 2))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("matlogic", 2))
                     }
                     "Алгоритмы/Мишунин" -> {
-                        message.text = api.scheduleOFCourse(Course("Algoritms", 1))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("Algoritms", 1))
                     }
                     "Алгоритмы/Лапенок" -> {
-                        message.text = api.scheduleOFCourse(Course("Algoritms", 2))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("Algoritms", 2))
                     }
                     "Формальные языки/Халанский" -> {
-                        message.text = api.scheduleOFCourse(Course("FormaLAng", 1))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("FormaLAng", 1))
                     }
                     "Формальные языки/Вербицкая" -> {
-                        message.text = api.scheduleOFCourse(Course("FormalLAng", 2))
+                        message.text = api.scheduleOFCourse(message.chatId, Course("FormalLAng", 2))
                     }
                     "Предмет по специализации" -> {
                         message.text = "specialization"
