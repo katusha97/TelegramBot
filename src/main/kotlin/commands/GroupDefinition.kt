@@ -12,7 +12,7 @@ class GroupDefinition : BotCommand("timetable_by_subject", "Выбери пре�
 
     private val listOfSubject = listOf<String>("Алгоритмы/Мишунин", "Алгоритмы/Лапенок",
         "Матлогика/Халанский", "Матлогика/Жаворонков", "Формальные языки/Халанский", "Формальные языки/Вербицкая",
-        "С++", "Матстат", "Типы в ЯП")
+        "Специализация")
 
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val message = SendMessage()
@@ -24,10 +24,10 @@ class GroupDefinition : BotCommand("timetable_by_subject", "Выбери пре�
         val keyboard: MutableList<KeyboardRow> = mutableListOf()
         val row1 = KeyboardRow()
         val row2 = KeyboardRow()
-        for (i in 0 until 4) {
+        for (i in 0 until listOfSubject.size / 2) {
             row1.add(listOfSubject[i])
         }
-        for (i in 4 until 9) {
+        for (i in listOfSubject.size / 2 until listOfSubject.size) {
             row2.add(listOfSubject[i])
         }
 

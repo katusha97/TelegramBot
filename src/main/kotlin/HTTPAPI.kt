@@ -6,14 +6,18 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import subjects.Course
+import utils.HomeworkToSend
+import subjects.SpecialCourse
+import utils.Homework
+import utils.ScheduleParams
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class HTTPAPI : API {
+class HTTPAPI() : API {
 
     private val client = HttpClient(CIO) { install(JsonFeature) }
 
-    override fun scheduleForTheDay(day: DayOfWeek, userId: String): Timetable {
+    override fun scheduleForTheDay(userId: String, day: DayOfWeek): Timetable {
         var json = ""
         runBlocking {
             json = client.get<String>("http://94.103.83.6:5001/day") {
@@ -26,7 +30,7 @@ class HTTPAPI : API {
     }
 
     override fun scheduleForToday(userId: String): Timetable {
-        return scheduleForTheDay(LocalDate.now().dayOfWeek, userId)
+        return scheduleForTheDay(userId, LocalDate.now().dayOfWeek)
     }
 
     override fun scheduleOFCourse(userId: String, course: Course): String {
@@ -41,20 +45,37 @@ class HTTPAPI : API {
         return res
     }
 
-    override fun scheduleForWeek() {
-        TODO("Not yet implemented")
+    override fun scheduleOFSpecialCourse(userId: String, course: SpecialCourse): String {
+        var res = ""
+        runBlocking {
+            res = client.get("http://94.103.83.6:5001/set_lessons") {
+                header("Content-Type", "application/json")
+                header("Ident", userId)
+                body = course
+            }
+        }
+        return res
     }
 
-    override fun sendHW() {
-        TODO("Not yet implemented")
+    override fun sendHW(userId: String, homework: HomeworkToSend): String {
+        var res = ""
+        runBlocking {
+            res = client.get("http://94.103.83.6:5001/send_hw") {
+                header("Content-Type", "application/json")
+                header("Ident", userId)
+                body = homework
+            }
+        }
+        return res
     }
 
-    override suspend fun getAllHW(): List<Homework> {
-        val response = client.get<String>("http://94.103.83.6:5001/homework")
+    override suspend fun getAllHW(userId: String): List<Homework> {
+        var response = ""
+        runBlocking {
+            response = client.get<String>("http://94.103.83.6:5001/homework") {
+                header("Ident", userId)
+            }
+        }
         return Json.decodeFromString(response)
-    }
-
-    override fun getHWForTheDay(day: DayOfWeek) {
-        TODO("Not yet implemented")
     }
 }

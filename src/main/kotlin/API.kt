@@ -1,4 +1,7 @@
 import subjects.Course
+import utils.HomeworkToSend
+import subjects.SpecialCourse
+import utils.Homework
 import java.time.DayOfWeek
 
 // 1. Расписание на день
@@ -10,10 +13,9 @@ import java.time.DayOfWeek
 
 interface API {
     fun scheduleForToday(userId: String): Timetable
-    fun scheduleForTheDay(day: DayOfWeek, userId: String): Timetable
+    fun scheduleForTheDay(userId: String, day: DayOfWeek): Timetable
     fun scheduleOFCourse(userId: String, course: Course): String
-    fun scheduleForWeek()
-    fun sendHW()
-    suspend fun getAllHW(): List<Homework>
-    fun getHWForTheDay(day: DayOfWeek)
+    fun scheduleOFSpecialCourse(userId: String, course: SpecialCourse): String
+    fun sendHW(userId: String, homework: HomeworkToSend): String
+    suspend fun getAllHW(userId: String): List<Homework>
 }

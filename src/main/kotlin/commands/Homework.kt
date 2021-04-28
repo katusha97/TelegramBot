@@ -12,11 +12,11 @@ class Homework: BotCommand("homework", "Получить список домаш
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val api = HTTPAPI()
         runBlocking {
-            val homeworks = api.getAllHW()
             val message = SendMessage()
             message.chatId = chat!!.id.toString()
             message.parseMode = "MarkdownV2"
             message.disableWebPagePreview = true
+            val homeworks = api.getAllHW(message.chatId)
             message.text = homeworks.joinToString("\n")
 
             absSender!!.execute(message)
