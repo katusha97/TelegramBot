@@ -7,7 +7,6 @@ fun main() {
         val botsApi = TelegramBotsApi(DefaultBotSession::class.java)
         val bot = OrganizerBot()
         botsApi.registerBot(bot)
-        HTTPServer(bot).run()
     } catch (e: TelegramApiException) {
         e.printStackTrace()
     }

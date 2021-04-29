@@ -1,4 +1,3 @@
-# Бот и сервер для нотификаций
 ## Запуск
 ```bash
 export JB_BOT_TOKEN=<bot_token>

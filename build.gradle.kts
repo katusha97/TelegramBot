@@ -25,12 +25,6 @@ dependencies {
     implementation("org.telegram:telegrambotsextensions:5.2.0")
     implementation("org.slf4j:slf4j-api:1.7.30")
     implementation("org.slf4j:slf4j-simple:1.7.30")
-    implementation(kotlin("stdlib"))
-    implementation("io.ktor:ktor-server-core:1.5.3")
-    implementation("io.ktor:ktor-server-netty:1.5.3")
-    implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation("io.ktor:ktor-serialization:1.5.3")
-
 }
 
 

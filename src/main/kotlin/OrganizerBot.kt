@@ -10,8 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 import models.Course
 import models.HomeworkToSend
-import models.Notification
-import models.SpecialCourse
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.*
@@ -43,6 +41,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
         register(HW())
         register(Perfreport())
         register(HomeworkSubj())
+        register(Start())
         fillMap()
     }
 
@@ -171,14 +170,5 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
         mapOfCommandName["C++"] = listOf(Subject.CPP.subjectName)
         mapOfCommandName["Матстат"] = listOf(Subject.MATSTAT.subjectName)
         mapOfCommandName["Типы в ЯП"] = listOf(Subject.TAPL.subjectName)
-    }
-
-    fun sendNotification(notification: Notification) {
-        notification.users.forEach { chatId ->
-            val message = SendMessage()
-            message.chatId = chatId
-            message.text = notification.text
-            execute(message)
-        }
     }
 }
