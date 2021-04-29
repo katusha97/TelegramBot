@@ -1,7 +1,4 @@
-import subjects.Course
-import utils.HomeworkToSend
-import subjects.SpecialCourse
-import utils.Homework
+import models.*
 import java.time.DayOfWeek
 
 // 1. Расписание на день
@@ -17,5 +14,7 @@ interface API {
     fun scheduleOFCourse(userId: String, course: Course): String
     fun scheduleOFSpecialCourse(userId: String, course: SpecialCourse): String
     fun sendHW(userId: String, homework: HomeworkToSend): String
-    suspend fun getAllHW(userId: String): List<Homework>
+    suspend fun getAllHW(userId: String): List<HomeworkResponse>
+    suspend fun getHW(userId: String, subject: Subject): HomeworkResponse
+    suspend fun getPerfreport(userId: String, subject: Subject): PerfreportResponse
 }
