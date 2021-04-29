@@ -12,7 +12,7 @@ class GroupDefinition : BotCommand("timetable_by_subject", "Выбери пре�
 
     private val listOfSubject = listOf<String>("Алгоритмы/Мишунин", "Алгоритмы/Лапенок",
         "Матлогика/Халанский", "Матлогика/Жаворонков", "Формальные языки/Халанский", "Формальные языки/Вербицкая",
-        "Специализация")
+        "Предмет по специализации")
 
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val message = SendMessage()
