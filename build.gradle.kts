@@ -37,5 +37,5 @@ tasks.withType<KotlinCompile>() {
 }
 
 application {
-    mainClass.set("OrganizerBotKt")
+    mainClass.set("MainKt")
 }
