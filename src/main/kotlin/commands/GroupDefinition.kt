@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 import org.telegram.telegrambots.meta.bots.AbsSender
 
-class GroupDefinition : BotCommand("timetable_by_subject", "Выбери предмет") {
+class GroupDefinition : BotCommand("timetable_by_subject", "Запомнить у какого ты преподавателя") {
 
     private val listOfSubject = listOf<String>("Алгоритмы/Мишунин", "Алгоритмы/Лапенок",
         "Матлогика/Халанский", "Матлогика/Жаворонков", "Формальные языки/Халанский", "Формальные языки/Вербицкая",

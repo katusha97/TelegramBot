@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.databind.util.ISO8601Utils.format
 import commands.*
 import commands.Homework
 import commands.Timetable
@@ -9,9 +10,14 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 import models.Course
+import models.HomeworkResponse
 import models.HomeworkToSend
 import models.SpecialCourse
+import java.lang.String.format
+import java.sql.Time
 import java.time.DayOfWeek
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
 import kotlin.collections.HashMap

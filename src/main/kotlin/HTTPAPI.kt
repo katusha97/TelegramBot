@@ -56,7 +56,7 @@ class HTTPAPI : API {
     override fun sendHW(userId: String, homework: HomeworkToSend): String {
         var res = ""
         runBlocking {
-            res = client.get("http://94.103.83.6:5001/send_hw") {
+            res = client.get("http://94.103.83.6:5001/homework/send") {
                 header("Content-Type", "application/json")
                 header("Ident", userId)
                 body = homework
