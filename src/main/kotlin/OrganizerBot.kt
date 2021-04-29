@@ -12,9 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import models.Course
 import models.HomeworkResponse
 import models.HomeworkToSend
-import models.SpecialCourse
-import java.lang.String.format
-import java.sql.Time
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -24,8 +21,10 @@ import kotlin.collections.HashMap
 
 class OrganizerBot : TelegramLongPollingCommandBot() {
     private val lastFiles = HashMap<String, String>()
-    private val listOfSubjectForHW = listOf("Алгоритмы ДЗ", "Матлогика ДЗ", "Формальные языки ДЗ", "С++ ДЗ",
-        "Матстат ДЗ", "Типы в ЯП ДЗ")
+    private val listOfSubjectForHW = listOf(
+        "Алгоритмы ДЗ", "Матлогика ДЗ", "Формальные языки ДЗ", "С++ ДЗ",
+        "Матстат ДЗ", "Типы в ЯП ДЗ"
+    )
     private val listOfSpecialSubject = listOf("С++", "Матстат", "Типы в ЯП")
     private val mapOfCommandName = HashMap<String, List<String>>()
 
@@ -46,6 +45,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
         register(HW())
         register(Perfreport())
         register(HomeworkSubj())
+        register(Start())
         fillMap()
     }
 
@@ -56,7 +56,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
             if (commandName == "perfreport") {
                 val subject = Subject.values().find { v -> v.name == data }!!
                 runBlocking {
-                    val perfreport = api.getPerfreport(update.callbackQuery.message.messageId.toString(), subject)
+                    val perfreport = api.getPerfreport(update.callbackQuery.message.chatId.toString(), subject)
                     val edit = EditMessageText.builder()
                         .chatId(update.callbackQuery.message.chatId.toString())
                         .messageId(update.callbackQuery.message.messageId)
@@ -67,7 +67,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
             } else if (commandName == "homework_subj") {
                 val subject = Subject.values().find { v -> v.name == data }!!
                 runBlocking {
-                    val homework = api.getHW(update.callbackQuery.message.messageId.toString(), subject)
+                    val homework = api.getHW(update.callbackQuery.message.chatId.toString(), subject)
                     val edit = EditMessageText.builder()
                         .chatId(update.callbackQuery.message.chatId.toString())
                         .messageId(update.callbackQuery.message.messageId)
@@ -77,8 +77,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                     execute(edit)
                 }
             }
-        }
-        else if (update.hasMessage() && update.message.hasDocument()) {
+        } else if (update.hasMessage() && update.message.hasDocument()) {
             val message = SendMessage()
             message.chatId = update.message.chatId.toString()
             message.parseMode = "MarkdownV2"
