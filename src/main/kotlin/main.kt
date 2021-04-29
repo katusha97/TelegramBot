@@ -5,7 +5,9 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 fun main() {
     try {
         val botsApi = TelegramBotsApi(DefaultBotSession::class.java)
-        botsApi.registerBot(OrganizerBot())
+        val bot = OrganizerBot()
+        botsApi.registerBot(bot)
+        HTTPServer(bot).run()
     } catch (e: TelegramApiException) {
         e.printStackTrace()
     }
