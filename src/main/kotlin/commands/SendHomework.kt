@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.bots.AbsSender
 
-class HW : BotCommand("/send_homework", "Отправить домашку") {
+class SendHomework : BotCommand("/send_homework", "Отправить домашку") {
 
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val message = SendMessage()

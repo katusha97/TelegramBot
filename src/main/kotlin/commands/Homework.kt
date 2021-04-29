@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.bots.AbsSender
 
-class Homework: BotCommand("homework", "Получить список домашек на сегодня") {
+class Homework: BotCommand("homework", "Получить список домашек") {
     override fun execute(absSender: AbsSender?, user: User?, chat: Chat?, arguments: Array<out String>?) {
         val api = HTTPAPI()
         runBlocking {

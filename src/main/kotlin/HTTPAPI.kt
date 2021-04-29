@@ -22,6 +22,7 @@ class HTTPAPI : API {
                 body = ScheduleParams(day.value)
             }
         }
+        System.err.println(json);
         return Json.decodeFromString(json)
     }
 

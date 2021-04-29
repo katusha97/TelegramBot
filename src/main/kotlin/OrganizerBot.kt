@@ -1,8 +1,8 @@
-import com.fasterxml.jackson.databind.util.ISO8601Utils.format
 import commands.*
 import commands.Homework
 import commands.Timetable
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot
@@ -10,20 +10,15 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 import models.Course
-import models.HomeworkResponse
 import models.HomeworkToSend
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import java.time.DayOfWeek
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
 import kotlin.collections.HashMap
 
 class OrganizerBot : TelegramLongPollingCommandBot() {
     private val lastFiles = HashMap<String, String>()
+    private val subscribers = HashSet<String>()
     private val listOfSubjectForHW = listOf(
         "Алгоритмы ДЗ", "Матлогика ДЗ", "Формальные языки ДЗ", "С++ ДЗ",
         "Матстат ДЗ", "Типы в ЯП ДЗ"
@@ -45,11 +40,29 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
         register(Homework())
         register(CourseDefinition())
         register(GroupDefinition())
-        register(HW())
+        register(SendHomework())
         register(Perfreport())
         register(HomeworkSubj())
         register(Start())
+        register(Help())
         fillMap()
+        loop()
+    }
+
+    private fun loop() {
+        CoroutineScope(IO).launch {
+            while (isActive) {
+                val api = HTTPAPI()
+                for (s in subscribers) {
+                    val message = SendMessage()
+                    val homeworks = api.getAllHW(s)
+                    message.chatId = s
+                    message.text = homeworks.joinToString("\n")
+                    execute(message)
+                }
+                delay(2880000000)
+            }
+        }
     }
 
     override fun processNonCommandUpdate(update: Update?) {
@@ -105,7 +118,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
             keyboardMarkup.oneTimeKeyboard = true
             message.text = "Выберите предмет"
             execute(message)
-            val fileId = update.message.document.fileId // fileUniqueId?
+            val fileId = update.message.document.fileId
             lastFiles[update.message.chatId.toString()] = fileId
         } else if (update.hasMessage() && update.message.hasText()) {
             val message = SendMessage()
@@ -122,7 +135,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                 message.text = lessons.lessons.joinToString("\n")
             } else {
                 when {
-                    currCommand.contains('/') -> {
+                    currCommand.contains('/') && currCommand[0] != '/'-> {
                         message.text = api.scheduleOFCourse(
                             message.chatId,
                             Course(mapOfCommandName[currCommand]!![0], mapOfCommandName[currCommand]!![1].toInt())
@@ -154,6 +167,14 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                     currCommand == "С++" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 1))
                     currCommand == "Матстат" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 2))
                     currCommand == "Типы в ЯП" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 3))
+                    currCommand == "/subscribe" -> {
+                        subscribers.add(message.chatId)
+                        message.text = "Вы подписаны на оповещения"
+                    }
+                    currCommand == "/unsubscribe" -> {
+                        subscribers.remove(message.chatId)
+                        message.text = "Вы отписаны от оповещений"
+                    }
                     else -> message.text = "invalid command"
                 }
             }
