@@ -1,11 +1,11 @@
-package utils
+package models
 
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Serializable
-data class Homework(
+data class HomeworkResponse(
     val date: String,
     val subject: String,
     val text: String,

@@ -5,15 +5,11 @@ import io.ktor.client.request.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import subjects.Course
-import utils.HomeworkToSend
-import subjects.SpecialCourse
-import utils.Homework
-import utils.ScheduleParams
+import models.*
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class HTTPAPI() : API {
+class HTTPAPI : API {
 
     private val client = HttpClient(CIO) { install(JsonFeature) }
 
@@ -69,12 +65,27 @@ class HTTPAPI() : API {
         return res
     }
 
-    override suspend fun getAllHW(userId: String): List<Homework> {
-        var response = ""
-        runBlocking {
-            response = client.get<String>("http://94.103.83.6:5001/homework") {
-                header("Ident", userId)
-            }
+    override suspend fun getAllHW(userId: String): List<HomeworkResponse> {
+        val response = client.get<String>("http://94.103.83.6:5001/homework") {
+            header("Ident", userId)
+        }
+        return Json.decodeFromString(response)
+    }
+
+    override suspend fun getHW(userId: String, subject: Subject): HomeworkResponse {
+        val response = client.get<String>("http://94.103.83.6:5001/homework/subj") {
+            header("Content-Type", "application/json")
+            header("Ident", userId)
+            body = SubjectRequest(subject.subjectName)
+        }
+        return Json.decodeFromString(response)
+    }
+
+    override suspend fun getPerfreport(userId: String, subject: Subject): PerfreportResponse {
+        val response = client.get<String>("http://94.103.83.6:5001/perfreport") {
+            header("Content-Type", "application/json")
+            header("Ident", userId)
+            body = SubjectRequest(subject.subjectName)
         }
         return Json.decodeFromString(response)
     }

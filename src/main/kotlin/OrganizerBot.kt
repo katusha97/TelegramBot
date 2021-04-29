@@ -1,14 +1,16 @@
 import commands.*
 import commands.Homework
 import commands.Timetable
+import kotlinx.coroutines.runBlocking
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
-import subjects.Course
-import utils.HomeworkToSend
-import subjects.SpecialCourse
+import models.Course
+import models.HomeworkToSend
+import models.SpecialCourse
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.*
@@ -36,11 +38,41 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
         register(CourseDefinition())
         register(GroupDefinition())
         register(HW())
+        register(Perfreport())
+        register(HomeworkSubj())
         fillMap()
     }
 
     override fun processNonCommandUpdate(update: Update?) {
-        if (update!!.hasMessage() && update.message.hasDocument()) {
+        val api: API = HTTPAPI()
+        if (update!!.hasCallbackQuery()) {
+            val (commandName, data) = update.callbackQuery.data.split("/")
+            if (commandName == "perfreport") {
+                val subject = Subject.values().find { v -> v.name == data }!!
+                runBlocking {
+                    val perfreport = api.getPerfreport(update.callbackQuery.message.messageId.toString(), subject)
+                    val edit = EditMessageText.builder()
+                        .chatId(update.callbackQuery.message.chatId.toString())
+                        .messageId(update.callbackQuery.message.messageId)
+                        .text(perfreport.link)
+                        .build()
+                    execute(edit)
+                }
+            } else if (commandName == "homework_subj") {
+                val subject = Subject.values().find { v -> v.name == data }!!
+                runBlocking {
+                    val homework = api.getHW(update.callbackQuery.message.messageId.toString(), subject)
+                    val edit = EditMessageText.builder()
+                        .chatId(update.callbackQuery.message.chatId.toString())
+                        .messageId(update.callbackQuery.message.messageId)
+                        .text(homework.toString())
+                        .parseMode("MarkdownV2")
+                        .build()
+                    execute(edit)
+                }
+            }
+        }
+        else if (update.hasMessage() && update.message.hasDocument()) {
             val message = SendMessage()
             message.chatId = update.message.chatId.toString()
             message.parseMode = "MarkdownV2"
@@ -65,7 +97,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
             keyboardMarkup.oneTimeKeyboard = true
             message.text = "Выберите предмет"
             execute(message)
-            val fileId = update.message.document.fileId; // fileUniqueId?
+            val fileId = update.message.document.fileId // fileUniqueId?
             lastFiles[update.message.chatId.toString()] = fileId
         } else if (update.hasMessage() && update.message.hasText()) {
             val message = SendMessage()
@@ -74,7 +106,6 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
             message.disableWebPagePreview = true
             val currCommand = update.message.text
             System.err.println(currCommand)
-            val api = HTTPAPI()
             val day = DayOfWeek.values().find { d ->
                 d.getDisplayName(TextStyle.FULL, Locale.US) == update.message.text
             }
