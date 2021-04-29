@@ -129,7 +129,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
 
                         )
                     }
-                    currCommand == "Специализация" -> {
+                    currCommand == "Предмет по специализации" -> {
                         val keyboardMarkup = ReplyKeyboardMarkup()
                         val keyboard: MutableList<KeyboardRow> = mutableListOf()
                         val row = KeyboardRow()
@@ -145,12 +145,9 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                         message.text = "Выберите предмет"
                         execute(message)
                     }
-                    currCommand == "С++" -> message.text =
-                        api.scheduleOFSpecialCourse(message.chatId, SpecialCourse("C++"))
-                    currCommand == "Матстат" -> message.text =
-                        api.scheduleOFSpecialCourse(message.chatId, SpecialCourse("matstat"))
-                    currCommand == "Типы в ЯП" -> message.text =
-                        api.scheduleOFSpecialCourse(message.chatId, SpecialCourse("type"))
+                    currCommand == "С++" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 1))
+                    currCommand == "Матстат" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 2))
+                    currCommand == "Типы в ЯП" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 3))
                     else -> message.text = "invalid command"
                 }
             }
@@ -159,21 +156,21 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
     }
 
     private fun fillMap() {
-        mapOfCommandName["Типы в ЯП ДЗ"] = listOf("type")
-        mapOfCommandName["Матстат ДЗ"] = listOf("matstat")
-        mapOfCommandName["С++ ДЗ"] = listOf("C++")
-        mapOfCommandName["Формальные языки ДЗ"] = listOf("formalLang")
-        mapOfCommandName["Алгоритмы ДЗ"] = listOf("algorithm")
-        mapOfCommandName["Матлогика ДЗ"] = listOf("mathlogic")
-        mapOfCommandName["Формальные языки/Вербицкая"] = listOf("formalLang", "2")
-        mapOfCommandName["Формальные языки/Халанский"] = listOf("formalLang", "1")
-        mapOfCommandName["Алгоритмы/Лапенок"] = listOf("algorithm", "2")
-        mapOfCommandName["Алгоритмы/Мишунин"] = listOf("algorithm", "1")
-        mapOfCommandName["Матлогика/Халанский"] = listOf("mathlogic", "2")
-        mapOfCommandName["Матлогика/Жаворонков"] = listOf("mathlogic", "1")
-        mapOfCommandName["C++"] = listOf("C++")
-        mapOfCommandName["Матстат"] = listOf("matstat")
-        mapOfCommandName["Типы в ЯП"] = listOf("type")
+        mapOfCommandName["Типы в ЯП ДЗ"] = listOf(Subject.TAPL.subjectName)
+        mapOfCommandName["Матстат ДЗ"] = listOf(Subject.MATSTAT.subjectName)
+        mapOfCommandName["С++ ДЗ"] = listOf(Subject.CPP.subjectName)
+        mapOfCommandName["Формальные языки ДЗ"] = listOf(Subject.FORMALLANG.subjectName)
+        mapOfCommandName["Алгоритмы ДЗ"] = listOf(Subject.ALGO.subjectName)
+        mapOfCommandName["Матлогика ДЗ"] = listOf(Subject.MATLOG.subjectName)
+        mapOfCommandName["Формальные языки/Вербицкая"] = listOf(Subject.FORMALLANG.subjectName, "2")
+        mapOfCommandName["Формальные языки/Халанский"] = listOf(Subject.FORMALLANG.subjectName, "1")
+        mapOfCommandName["Алгоритмы/Лапенок"] = listOf(Subject.ALGO.subjectName, "2")
+        mapOfCommandName["Алгоритмы/Мишунин"] = listOf(Subject.ALGO.subjectName, "1")
+        mapOfCommandName["Матлогика/Халанский"] = listOf(Subject.MATLOG.subjectName, "2")
+        mapOfCommandName["Матлогика/Жаворонков"] = listOf(Subject.MATLOG.subjectName, "1")
+        mapOfCommandName["C++"] = listOf(Subject.CPP.subjectName)
+        mapOfCommandName["Матстат"] = listOf(Subject.MATSTAT.subjectName)
+        mapOfCommandName["Типы в ЯП"] = listOf(Subject.TAPL.subjectName)
     }
 
     fun sendNotification(notification: Notification) {

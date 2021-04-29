@@ -18,6 +18,7 @@ class Homework: BotCommand("homework", "Получить список домаш
             message.disableWebPagePreview = true
             val homeworks = api.getAllHW(message.chatId)
             message.text = homeworks.joinToString("\n")
+            System.err.println(message.text)
 
             absSender!!.execute(message)
         }
