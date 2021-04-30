@@ -16,7 +16,7 @@ class TimetableToday : BotCommand("timetable_today", "Расписание на 
 
         val api = HTTPAPI()
         val lessons = api.scheduleForToday(message.chatId)
-        message.text = lessons.lessons.joinToString("\n")
+        message.text = if (lessons.lessons.isEmpty()) {"В этот день занятий нет"} else {lessons.lessons.joinToString("\n")}
         absSender!!.execute(message)
     }
 }

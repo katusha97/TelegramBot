@@ -90,7 +90,7 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                     val edit = EditMessageText.builder()
                         .chatId(update.callbackQuery.message.chatId.toString())
                         .messageId(update.callbackQuery.message.messageId)
-                        .text(homework.toString())
+                        .text(homework?.toString() ?: "Домашних заданий нет")
                         .parseMode("MarkdownV2")
                         .build()
                     execute(edit)
@@ -135,7 +135,8 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
             }
             if (day != null) {
                 val lessons = api.scheduleForTheDay(message.chatId, day)
-                message.text = lessons.lessons.joinToString("\n")
+                message.text = if(lessons.lessons.isEmpty()) {"В этот день занятий нет"} else { lessons.lessons.joinToString("\n") }
+
             } else {
                 when {
                     currCommand.contains('/') && currCommand[0] != '/'-> {

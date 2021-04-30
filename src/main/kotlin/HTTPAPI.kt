@@ -73,11 +73,14 @@ class HTTPAPI : API {
         return Json.decodeFromString(response)
     }
 
-    override suspend fun getHW(userId: String, subject: Subject): HomeworkResponse {
+    override suspend fun getHW(userId: String, subject: Subject): HomeworkResponse? {
         val response = client.get<String>(System.getenv("JB_BOT_HOST") + "homework/subj") {
             header("Content-Type", "application/json")
             header("Ident", userId)
             body = SubjectRequest(subject.subjectName)
+        }
+        if (response == "null") {
+            return null;
         }
         return Json.decodeFromString(response)
     }
