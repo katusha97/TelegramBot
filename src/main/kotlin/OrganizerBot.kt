@@ -58,6 +58,9 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                     val homeworks = api.getAllHW(s)
                     message.chatId = s
                     message.text = homeworks.joinToString("\n")
+                    if (message.text == "") {
+                        message.text = "У вас нет домашних заданий"
+                    }
                     execute(message)
                 }
                 delay(2880000000)
@@ -145,8 +148,10 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                         message.text = api.sendHW(
                             message.chatId,
                             HomeworkToSend(lastFiles[message.chatId]!!, mapOfCommandName[currCommand]!![0])
-
                         )
+                        if (message.text == "") {
+                            message.text = "У вас нет домашних заданий"
+                        }
                     }
                     currCommand == "Предмет по специализации" -> {
                         val keyboardMarkup = ReplyKeyboardMarkup()
@@ -162,7 +167,6 @@ class OrganizerBot : TelegramLongPollingCommandBot() {
                         message.replyMarkup = keyboardMarkup
                         keyboardMarkup.oneTimeKeyboard = true
                         message.text = "Выберите предмет"
-                        execute(message)
                     }
                     currCommand == "С++" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 1))
                     currCommand == "Матстат" -> message.text = api.scheduleOFCourse(message.chatId, Course("spec", 2))

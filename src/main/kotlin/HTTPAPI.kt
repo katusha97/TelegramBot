@@ -16,7 +16,7 @@ class HTTPAPI : API {
     override fun scheduleForTheDay(userId: String, day: DayOfWeek): Timetable {
         var json = ""
         runBlocking {
-            json = client.get<String>("http://94.103.83.6:5001/day") {
+            json = client.get<String>(System.getenv("JB_BOT_HOST") + "day") {
                 header("Content-Type", "application/json")
                 header("Ident", userId)
                 body = ScheduleParams(day.value)
@@ -33,7 +33,7 @@ class HTTPAPI : API {
     override fun scheduleOFCourse(userId: String, course: Course): String {
         var res = ""
         runBlocking {
-            res = client.get("http://94.103.83.6:5001/set_lessons") {
+            res = client.get(System.getenv("JB_BOT_HOST") + "set_lessons") {
                 header("Content-Type", "application/json")
                 header("Ident", userId)
                 body = course
@@ -45,7 +45,7 @@ class HTTPAPI : API {
     override fun scheduleOFSpecialCourse(userId: String, course: SpecialCourse): String {
         var res = ""
         runBlocking {
-            res = client.get("http://94.103.83.6:5001/set_lessons") {
+            res = client.get(System.getenv("JB_BOT_HOST") + "set_lessons") {
                 header("Content-Type", "application/json")
                 header("Ident", userId)
                 body = course
@@ -57,7 +57,7 @@ class HTTPAPI : API {
     override fun sendHW(userId: String, homework: HomeworkToSend): String {
         var res = ""
         runBlocking {
-            res = client.get("http://94.103.83.6:5001/homework/send") {
+            res = client.get(System.getenv("JB_BOT_HOST") + "homework/send") {
                 header("Content-Type", "application/json")
                 header("Ident", userId)
                 body = homework
@@ -67,14 +67,14 @@ class HTTPAPI : API {
     }
 
     override suspend fun getAllHW(userId: String): List<HomeworkResponse> {
-        val response = client.get<String>("http://94.103.83.6:5001/homework") {
+        val response = client.get<String>(System.getenv("JB_BOT_HOST") + "homework") {
             header("Ident", userId)
         }
         return Json.decodeFromString(response)
     }
 
     override suspend fun getHW(userId: String, subject: Subject): HomeworkResponse {
-        val response = client.get<String>("http://94.103.83.6:5001/homework/subj") {
+        val response = client.get<String>(System.getenv("JB_BOT_HOST") + "homework/subj") {
             header("Content-Type", "application/json")
             header("Ident", userId)
             body = SubjectRequest(subject.subjectName)
@@ -83,7 +83,7 @@ class HTTPAPI : API {
     }
 
     override suspend fun getPerfreport(userId: String, subject: Subject): PerfreportResponse {
-        val response = client.get<String>("http://94.103.83.6:5001/perfreport") {
+        val response = client.get<String>(System.getenv("JB_BOT_HOST") + "perfreport") {
             header("Content-Type", "application/json")
             header("Ident", userId)
             body = SubjectRequest(subject.subjectName)
